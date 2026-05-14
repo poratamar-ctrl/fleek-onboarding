@@ -85,7 +85,21 @@ const hashSeed = (s) => {
   return Math.abs(h);
 };
 
-export const Avatar = ({ name, size = 40 }) => {
+export const Avatar = ({ name, photo, size = 40 }) => {
+  if (photo) {
+    return (
+      <span
+        className="avatar"
+        style={{ width: size, height: size, overflow: 'hidden', flexShrink: 0 }}
+      >
+        <img
+          src={photo}
+          alt={name}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+        />
+      </span>
+    );
+  }
   const g = avatarGradients[hashSeed(name) % avatarGradients.length];
   return (
     <span

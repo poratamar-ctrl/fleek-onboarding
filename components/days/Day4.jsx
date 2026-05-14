@@ -4,13 +4,28 @@ import { useState } from 'react';
 import { Icon, SectionHead } from '../ui';
 import { useTaskMark } from '../DayContent';
 
+const TOOLKIT = [
+  { kind: 'core', name: 'Deel', role: 'HRIS · payroll · contracts · visas', note: 'Your single source of truth. The 25th of each month is non-negotiable.' },
+  { kind: 'core', name: 'Slack', role: 'Sync + async', note: 'Public channels over DMs. #ask-operations is judgment-free.' },
+  { kind: 'core', name: 'Notion', role: 'Docs · handbook · onboarding plans', note: "If it isn't in Notion, it doesn't exist." },
+  { kind: 'core', name: 'Linear', role: 'We run People Ops in sprints', note: "Two-week cycles. You'll set yours in week three." },
+  { kind: 'core', name: 'Google Workspace', role: 'Calendar · drive · meet', note: 'Calendars are public by default. Block focus time deliberately.' },
+  { kind: 'ai', name: 'ChatGPT', role: 'Default thinking partner', note: 'Paid seats for everyone. Strong on drafting, long-context summarisation, code.' },
+  { kind: 'ai', name: 'Claude', role: 'The other default', note: 'Paid seats too. Stronger writing, better with tone, sharper on judgment calls.' },
+  { kind: 'ai', name: 'Zapier', role: 'No-code automation', note: 'Most internal automations live here today.' },
+  { kind: 'ai', name: 'Make', role: 'When Zapier hits a ceiling', note: 'Heavier flows, branching logic, error handling.' },
+  { kind: 'ai', name: 'n8n', role: 'Trialling for self-hosted flows', note: "We're testing whether to consolidate. Pick a workflow and benchmark." },
+];
+
 const AI_USES = [
-  { icon: 'workflow', title: 'Drafting offer letters', note: 'Pulls from candidate notes + comp band. You always edit. AI never sends.' },
-  { icon: 'message', title: 'Triaging #ask-people', note: 'Suggests answers from our internal handbook. Routes the ones it can\'t answer to a human.' },
+  { icon: 'workflow', title: 'Drafting offer letters in Deel', note: 'Pulls from candidate notes + comp band. You always edit. AI never sends.' },
+  { icon: 'message', title: 'Triaging #ask-operations', note: 'Suggests answers from our internal handbook. Routes the ones it can\'t answer to a human.' },
   { icon: 'book', title: 'Summarising 1:1 notes', note: 'If you record retros with consent, AI gives you a structured summary in 30 seconds.' },
   { icon: 'users', title: 'Drafting interview scorecards', note: 'From a JD + transcript. Standardises evaluation. Bias-checked monthly.' },
-  { icon: 'flag', title: 'Internal announcements', note: 'First draft in our tone. You add the warmth and the specifics.' },
+  { icon: 'flag', title: 'Payroll diff explainer', note: "AI reads Deel's monthly export and flags anomalies in plain English." },
   { icon: 'sparkle', title: 'New-joiner welcome notes', note: 'Personalised from their intake form. Your manager adds two sentences. Sent same-day.' },
+  { icon: 'send', title: 'Vendor follow-ups', note: 'Drafts and chases vendor emails. Office contracts, catering, cleaners.' },
+  { icon: 'clock', title: 'All Hands agenda first draft', note: 'From updates posted in Slack the week prior. You shape it from there.' },
 ];
 
 const PROMPTS = [
@@ -57,18 +72,20 @@ Tone: direct, warm, slightly bold. Avoid "thrilled", "excited to announce", "syn
   },
 ];
 
-const WORKFLOW_TRIGGERS = [
-  'When offer is accepted',
-  '7 days before start date',
-  'Morning of start date',
-  'End of week 1',
-];
-
 export default function Day4({ profile, state, onUpdate }) {
   const mark = useTaskMark(state, onUpdate);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 64 }}>
+      <section onMouseEnter={() => mark('stack')}>
+        <SectionHead
+          eyebrow="Your toolkit"
+          title="The stack you'll run People Ops on"
+          sub="Day-one provisioned. You have opinions on which of these actually pay back. We want to hear them."
+        />
+        <ToolkitGrid />
+      </section>
+
       <section onMouseEnter={() => mark('ai-use')}>
         <SectionHead
           eyebrow="AI inside People Ops"
@@ -87,19 +104,53 @@ export default function Day4({ profile, state, onUpdate }) {
         <PromptLibrary />
       </section>
 
-      <section onMouseEnter={() => mark('build')}>
-        <SectionHead
-          eyebrow="Hands on"
-          title="Build your first onboarding workflow"
-          sub="Draft a simple Day-1 automation for a future new joiner. Just sketch it. We'll refine in real life."
-        />
-        <WorkflowBuilder state={state} onUpdate={onUpdate} />
-      </section>
-
       <section onMouseEnter={() => mark('honest')}>
         <SectionHead eyebrow="The honest section" title="What we're still figuring out" />
         <HonestSection />
       </section>
+    </div>
+  );
+}
+
+function ToolkitGrid() {
+  return (
+    <div>
+      <div className="mono" style={{ fontSize: 11, color: 'var(--text-3)', letterSpacing: '0.1em', marginBottom: 12 }}>
+        HRIS, COLLAB, AND DOCS
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12, marginBottom: 24 }}>
+        {TOOLKIT.filter((t) => t.kind === 'core').map((t) => <ToolCard key={t.name} t={t} />)}
+      </div>
+      <div className="mono" style={{ fontSize: 11, color: 'var(--text-3)', letterSpacing: '0.1em', marginBottom: 12 }}>
+        AI + AUTOMATION
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
+        {TOOLKIT.filter((t) => t.kind === 'ai').map((t) => <ToolCard key={t.name} t={t} highlight />)}
+      </div>
+    </div>
+  );
+}
+
+function ToolCard({ t, highlight }) {
+  return (
+    <div className="card card-hover" style={{ padding: 18 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+        <span style={{
+          width: 28, height: 28, borderRadius: 7,
+          background: highlight ? 'var(--accent)' : 'var(--surface-2)',
+          color: highlight ? 'var(--on-accent)' : 'var(--text)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontWeight: 700, fontSize: 13, letterSpacing: '-0.02em',
+          border: '1px solid var(--border)',
+        }}>
+          {t.name[0]}
+        </span>
+        <div style={{ fontWeight: 500, fontSize: 14.5 }}>{t.name}</div>
+      </div>
+      <div className="mono" style={{ fontSize: 10.5, color: 'var(--text-3)', letterSpacing: '0.06em', marginBottom: 8, textTransform: 'uppercase' }}>
+        {t.role}
+      </div>
+      <div style={{ fontSize: 12.5, color: 'var(--text-2)', lineHeight: 1.5 }}>{t.note}</div>
     </div>
   );
 }
@@ -152,111 +203,13 @@ function PromptLibrary() {
                 whiteSpace: 'pre-wrap', margin: 0,
               }}>{p.body}</pre>
               <div style={{ marginTop: 12, display: 'flex', gap: 10 }}>
-                <button className="btn btn-quiet"><Icon name="plus" size={12} />Fork & edit</button>
+                <button className="btn btn-quiet"><Icon name="plus" size={12} />Fork &amp; edit</button>
                 <button className="btn btn-quiet"><Icon name="play" size={12} />Run with sample input</button>
               </div>
             </div>
           )}
         </div>
       ))}
-    </div>
-  );
-}
-
-function WorkflowBuilder({ state, onUpdate }) {
-  const wf = state.workflow || { trigger: 'Morning of start date', steps: [] };
-  const update = (next) => onUpdate({ ...state, workflow: next });
-
-  const addStep = (kind) => {
-    update({ ...wf, steps: [...wf.steps, { id: Date.now(), kind, text: '' }] });
-  };
-  const editStep = (id, text) => {
-    update({ ...wf, steps: wf.steps.map((s) => s.id === id ? { ...s, text } : s) });
-  };
-  const removeStep = (id) => {
-    update({ ...wf, steps: wf.steps.filter((s) => s.id !== id) });
-  };
-
-  const stepKinds = {
-    slack: { icon: 'message', label: 'Send Slack', placeholder: 'e.g. Send #ops a heads up about new joiner' },
-    email: { icon: 'send', label: 'Send email', placeholder: 'e.g. Welcome email with Day 1 logistics' },
-    ai: { icon: 'sparkle', label: 'Generate with AI', placeholder: 'e.g. Personalised welcome note from intake form' },
-    task: { icon: 'check', label: 'Create task', placeholder: 'e.g. Sofia, set up desk by 5pm prior day' },
-  };
-
-  return (
-    <div className="card" style={{ padding: 24 }}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 18 }}>
-        <span className="eyebrow">When</span>
-        <select
-          value={wf.trigger}
-          onChange={(e) => update({ ...wf, trigger: e.target.value })}
-          style={{
-            background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10,
-            padding: '12px 14px', color: 'var(--text)', fontSize: 15, fontFamily: 'inherit',
-            outline: 'none', appearance: 'none', cursor: 'pointer',
-          }}
-        >
-          {WORKFLOW_TRIGGERS.map((t) => <option key={t}>{t}</option>)}
-        </select>
-      </div>
-
-      <div style={{ borderLeft: '2px dashed var(--border)', marginLeft: 12, paddingLeft: 20, paddingTop: 8, paddingBottom: 8 }}>
-        {wf.steps.length === 0 && (
-          <div style={{ fontSize: 13, color: 'var(--text-3)', padding: '12px 0', fontStyle: 'italic' }}>
-            Add a step below. Just sketch. This is a draft, not a script.
-          </div>
-        )}
-        {wf.steps.map((s) => {
-          const k = stepKinds[s.kind];
-          return (
-            <div key={s.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 12, position: 'relative' }}>
-              <span style={{
-                position: 'absolute', left: -29, top: 14,
-                width: 16, height: 16, borderRadius: '50%',
-                background: 'var(--surface-2)', border: '1.5px solid var(--accent-deep)',
-              }} />
-              <div style={{
-                flex: 1, padding: '12px 14px', background: 'var(--surface)',
-                border: '1px solid var(--border)', borderRadius: 10,
-                display: 'flex', alignItems: 'center', gap: 12,
-              }}>
-                <Icon name={k.icon} size={14} style={{ color: 'var(--d4)' }} />
-                <span className="mono" style={{ fontSize: 11, color: 'var(--text-3)', minWidth: 90 }}>{k.label.toUpperCase()}</span>
-                <input
-                  value={s.text}
-                  onChange={(e) => editStep(s.id, e.target.value)}
-                  placeholder={k.placeholder}
-                  style={{ flex: 1, fontSize: 14, background: 'transparent', color: 'var(--text)', border: 'none', outline: 'none' }}
-                />
-                <button onClick={() => removeStep(s.id)} style={{ background: 'transparent', border: 'none', color: 'var(--text-3)', cursor: 'pointer', padding: 4 }}>
-                  <Icon name="close" size={14} />
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
-        {Object.entries(stepKinds).map(([id, k]) => (
-          <button key={id} className="chip" onClick={() => addStep(id)} style={{ cursor: 'pointer' }}>
-            <Icon name="plus" size={11} />
-            {k.label}
-          </button>
-        ))}
-      </div>
-
-      {wf.steps.length > 0 && (
-        <div style={{
-          marginTop: 18, padding: 14,
-          background: 'var(--surface)', borderRadius: 10,
-          fontSize: 13, color: 'var(--text-2)', lineHeight: 1.55,
-        }}>
-          <span className="mono" style={{ fontSize: 11, color: 'var(--d4)', display: 'block', marginBottom: 4 }}>NICE.</span>
-          You just drafted a {wf.steps.length}-step automation. In real life, you&apos;d build this in our internal tool (or just doc it in Notion first). Either is fine. Start with the doc.
-        </div>
-      )}
     </div>
   );
 }
@@ -269,10 +222,10 @@ function HonestSection() {
       </p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         {[
-          { title: 'Cross-region rituals are still rough.', body: 'We have three time zones. Our async writing isn\'t where it needs to be. Karachi and Bengaluru sometimes hear about decisions last. We know. You can help fix this.' },
-          { title: 'Onboarding has been inconsistent.', body: 'The last three new joiners had three different Day 1 experiences. This product you\'re using right now is, in part, our attempt to fix that. It\'s not done.' },
-          { title: 'Manager training is on the roadmap.', body: 'We promoted four ICs into manager roles this year. We haven\'t given them enough scaffolding. People Ops should be running a manager bootcamp by Q3.' },
-          { title: 'We over-rely on a few people.', body: 'Sofia knows everything about the office. If she leaves, we\'d lose months. We need this documented. Yes, this is one of your first projects.' },
+          { title: 'Cross-region rituals are still rough.', body: "We have three time zones. Our async writing isn't where it needs to be. Karachi and Bengaluru sometimes hear about decisions last. We know. You can help fix this." },
+          { title: 'Onboarding has been inconsistent.', body: "The last three new joiners had three different Day 1 experiences. This product you're using right now is, in part, our attempt to fix that. It's not done." },
+          { title: 'Manager training is on the roadmap.', body: "We promoted four ICs into manager roles this year. We haven't given them enough scaffolding. People Ops should be running a manager bootcamp by Q3." },
+          { title: 'We over-rely on a few people.', body: "Sofia knows everything about the office. If she leaves, we'd lose months. We need this documented. Yes, this is one of your first projects." },
         ].map((h) => (
           <div key={h.title} style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 14, alignItems: 'flex-start' }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--d4)', marginTop: 10 }} />

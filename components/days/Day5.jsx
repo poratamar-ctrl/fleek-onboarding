@@ -1,12 +1,13 @@
 'use client';
 
+import { MANAGER } from '../../data';
 import { Icon, Avatar, SectionHead } from '../ui';
 import { useTaskMark } from '../DayContent';
 
 const VISION = [
   {
     icon: 'users',
-    title: 'Onboarding that\'s measurably the reason people stay.',
+    title: "Onboarding that's measurably the reason people stay.",
     body: 'Every new joiner has the operating context to make their first real contribution inside 30 days. We measure this. We don\'t guess at it.',
   },
   {
@@ -31,30 +32,31 @@ const ROADMAP = [
     label: 'Week 1',
     intent: 'Land. Listen. Don\'t propose anything yet.',
     items: [
-      'Shadow Sofia for a full workspace day',
-      'Sit in on two new-joiner Day 1s',
-      '1:1 with each of the five teammates on Day 1\'s list',
-      'Read three previous offer letters end-to-end',
+      'Shadow Sofia for a full workspace day — every vendor, every contract',
+      'Sit in on two new-joiner Day 1s with Maya',
+      "1:1 with each of the four teammates on Day 1's list",
+      'Watch one full payroll cycle in Deel end-to-end',
     ],
   },
   {
     label: 'Week 2',
     intent: 'Start drawing the map. Name three things that feel broken.',
     items: [
-      'Run your first onboarding session as the lead',
-      'Audit the new-joiner experience, find the seams',
-      'Draft a one-pager on what you\'d improve, share with Ayesha',
-      'Take a flight or video call with the Karachi People team',
+      'Own your first new-joiner Day 1 as the lead',
+      'Audit the onboarding experience, find the seams',
+      'Draft a one-pager on what you\'d improve, share with Alex',
+      'Sync with the Karachi and Bengaluru ops leads on what they need from London',
     ],
   },
   {
     label: 'Month 1',
     intent: 'Ship one visible improvement. Earn the right to propose the bigger one.',
     items: [
-      'Ship one onboarding improvement end-to-end',
-      'Document one piece of tribal knowledge that lives in someone\'s head',
-      'Propose your Q2 priorities to Ayesha',
-      'First public talk at all-hands, share what you\'ve learned',
+      'Run your first payroll cycle in Deel, no slip-ups',
+      'Ship one onboarding improvement, end-to-end',
+      'Build your first Zapier or Make automation that removes a manual step',
+      'Plan and execute the next All Hands',
+      'Propose your Q2 priorities to Alex',
     ],
   },
 ];
@@ -152,7 +154,7 @@ function FinalMessage({ profile }) {
         <p style={{ fontSize: 16, color: 'var(--text-1)', lineHeight: 1.7, margin: '0 0 18px', maxWidth: 680 }}>
           {firstName}, on Monday you told us what excited you about being here.
           You said: <span style={{ color: 'var(--accent)', fontStyle: 'italic', fontFamily: "'Instrument Serif', serif", fontSize: 19 }}>
-            &quot;{profile.excitement || '...'}&quot;
+            &ldquo;{profile.excitement || '...'}&rdquo;
           </span>
         </p>
         <p style={{ fontSize: 16, color: 'var(--text-1)', lineHeight: 1.7, margin: '0 0 30px', maxWidth: 680 }}>
@@ -160,9 +162,9 @@ function FinalMessage({ profile }) {
           The job is to still be able to point at it and say <em style={{ fontFamily: "'Instrument Serif', serif" }}>yes, that</em>.
         </p>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <Avatar name="Ayesha Khan" size={36} />
+          <Avatar name={MANAGER.name} photo={MANAGER.photo} size={36} />
           <div>
-            <div style={{ fontSize: 14, fontWeight: 500 }}>Ayesha & the team</div>
+            <div style={{ fontSize: 14, fontWeight: 500 }}>Alex &amp; the team</div>
             <div style={{ fontSize: 12.5, color: 'var(--text-3)' }} className="mono">FRIDAY, 5:47PM</div>
           </div>
         </div>

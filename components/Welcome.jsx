@@ -95,13 +95,13 @@ export default function Welcome({ onStart }) {
                     borderRadius: 14,
                     display: 'flex', alignItems: 'center', gap: 16,
                   }}>
-                    <Avatar name="Ayesha Khan" size={44} />
+                    <Avatar name="Alex Nikityuk" size={44} />
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 4 }}>
-                        <span style={{ color: 'var(--text)', fontWeight: 500 }}>Ayesha Khan</span>, Head of People
+                        <span style={{ color: 'var(--text)', fontWeight: 500 }}>Alex Nikityuk</span>, Head of AI · your manager
                       </div>
                       <div style={{ fontSize: 14, color: 'var(--text-1)', lineHeight: 1.5 }}>
-                        &quot;Welcome in. I&apos;ll see you Monday. Take this week at your own pace.&quot;
+                        &quot;Welcome aboard. You&apos;re joining a role that shapes how the whole company runs day to day. Take this week at your own pace, and I&apos;ll see you Monday.&quot;
                       </div>
                     </div>
                   </div>

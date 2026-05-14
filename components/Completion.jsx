@@ -110,8 +110,8 @@ export default function Completion({ profile, state, onRestart, onOpenAssistant 
           <div className="eyebrow" style={{ marginBottom: 14 }}>What happens next</div>
           <div style={{ display: 'grid', gap: 10 }}>
             {[
-              { t: 'Monday 9am', b: '1:1 with Ayesha. Bring the reflection from Day 5. that\'s the conversation.' },
-              { t: 'Tuesday', b: 'Maya is taking you on a workspace walkthrough. Be curious, take notes.' },
+              { t: 'Monday 9am', b: '1:1 with Alex. Bring the reflection from Day 5. That\'s the conversation.' },
+              { t: 'Tuesday', b: 'Sofia is walking you through the workspace, end to end. Vendors, contracts, fobs.' },
               { t: 'Wednesday', b: 'Sit in on your first new-joiner Day 1. Listen for what\'s missing.' },
               { t: 'By end of week 2', b: 'Draft your one-pager: three things you\'d improve, in order of bet.' },
             ].map((n) => (
@@ -145,7 +145,7 @@ export default function Completion({ profile, state, onRestart, onOpenAssistant 
         </motion.div>
 
         <div style={{ marginTop: 48, textAlign: 'center', fontSize: 13, color: 'var(--text-3)' }}>
-          <span className="mono">Fleek · 22 Commercial Street, London · {new Date().getFullYear()}</span>
+          <span className="mono">Fleek · 22 Commercial Street, London E1 6LP · {new Date().getFullYear()}</span>
         </div>
       </Page>
     </div>
